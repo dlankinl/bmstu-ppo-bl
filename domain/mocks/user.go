@@ -10,7 +10,7 @@
 package mocks
 
 import (
-	domain "business-logic/domain"
+	domain "github.com/dlankinl/bmstu-ppo-bl/domain"
 	context "context"
 	reflect "reflect"
 

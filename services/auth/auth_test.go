@@ -1,11 +1,11 @@
 package auth
 
 import (
-	"business-logic/domain"
-	mocks2 "business-logic/domain/mocks"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/dlankinl/bmstu-ppo-bl/domain"
+	mocks2 "github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 	"ppo/pkg/base"

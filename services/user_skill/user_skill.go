@@ -1,9 +1,9 @@
 package user_skill
 
 import (
-	"business-logic/domain"
 	"context"
 	"fmt"
+	"github.com/dlankinl/bmstu-ppo-bl/domain"
 	"github.com/google/uuid"
 )
 

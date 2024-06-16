@@ -1,13 +1,13 @@
 package user_activity_field
 
 import (
-	"business-logic/domain"
-	mocks2 "business-logic/domain/mocks"
-	"business-logic/services/activity_field"
-	"business-logic/services/company"
-	"business-logic/services/fin_report"
-	"business-logic/services/user"
 	"context"
+	"github.com/dlankinl/bmstu-ppo-bl/domain"
+	mocks2 "github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/services/activity_field"
+	"github.com/dlankinl/bmstu-ppo-bl/services/company"
+	"github.com/dlankinl/bmstu-ppo-bl/services/fin_report"
+	"github.com/dlankinl/bmstu-ppo-bl/services/user"
 	"testing"
 
 	"github.com/google/uuid"

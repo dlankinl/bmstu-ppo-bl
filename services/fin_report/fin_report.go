@@ -1,9 +1,9 @@
 package fin_report
 
 import (
-	"business-logic/domain"
 	"context"
 	"fmt"
+	"github.com/dlankinl/bmstu-ppo-bl/domain"
 	"github.com/google/uuid"
 	"time"
 )

@@ -1,11 +1,11 @@
 package skill
 
 import (
-	"business-logic/domain"
-	"business-logic/domain/mocks"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/dlankinl/bmstu-ppo-bl/domain"
+	"github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"

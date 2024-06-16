@@ -1,8 +1,8 @@
 package user_activity_field
 
 import (
-	"business-logic/domain"
 	"fmt"
+	"github.com/dlankinl/bmstu-ppo-bl/domain"
 	"github.com/google/uuid"
 	"time"
 )

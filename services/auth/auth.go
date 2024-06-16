@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"business-logic/domain"
 	"business-logic/pkg/base"
 	"context"
 	"fmt"
+	"github.com/dlankinl/bmstu-ppo-bl/domain"
 )
 
 type Service struct {
