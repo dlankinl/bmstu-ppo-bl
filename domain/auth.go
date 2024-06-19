@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=auth.go -destination=mocks/auth.go -package=mocks
+//go:generate mockgen -source=auth.go -destination=../mocks/auth.go -package=mocks
 
 type UserAuth struct {
 	ID         uuid.UUID

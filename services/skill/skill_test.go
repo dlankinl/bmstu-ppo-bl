@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	"github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -17,7 +17,8 @@ func TestSkillService_Create(t *testing.T) {
 	defer ctrl.Finish()
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
-	svc := NewService(skillRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -127,7 +128,8 @@ func TestSkillService_DeleteById(t *testing.T) {
 	defer ctrl.Finish()
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
-	svc := NewService(skillRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(skillRepo, logger)
 
 	curUuid := uuid.New()
 
@@ -182,7 +184,8 @@ func TestSkillService_GetAll(t *testing.T) {
 	defer ctrl.Finish()
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
-	svc := NewService(skillRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -267,7 +270,8 @@ func TestSkillService_GetById(t *testing.T) {
 	defer ctrl.Finish()
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
-	svc := NewService(skillRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -337,7 +341,8 @@ func TestSkillService_Update(t *testing.T) {
 	defer ctrl.Finish()
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
-	svc := NewService(skillRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {
 		name       string

@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=user_skill.go -destination=mocks/user_skill.go -package=mocks
+//go:generate mockgen -source=user_skill.go -destination=../mocks/user_skill.go -package=mocks
 
 type UserSkill struct {
 	UserId  uuid.UUID

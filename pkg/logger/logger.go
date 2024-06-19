@@ -1,60 +1,63 @@
 package logger
 
 import (
-	"fmt"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
+	"github.com/rs/zerolog"
+	"io"
 	"os"
 )
 
-func NewLogger() (logger *zap.SugaredLogger, err error) {
-	err = os.Mkdir("./logs", os.ModePerm)
-	if err != nil && !os.IsExist(err) {
-		return nil, fmt.Errorf("создание папки для логов: %w", err)
+const (
+	ErrorLevel = "error"
+	WarnLevel  = "warn"
+	InfoLevel  = "info"
+)
+
+//go:generate mockgen -source=logger.go -destination=../../mocks/logger.go -package=mocks
+type ILogger interface {
+	Infof(message string, args ...interface{})
+	Warnf(message string, args ...interface{})
+	Errorf(message string, args ...interface{})
+	Fatalf(message string, args ...interface{})
+}
+
+type Logger struct {
+	logger *zerolog.Logger
+}
+
+func NewLogger(logLevel string, w io.Writer) ILogger {
+	var l zerolog.Level
+	switch logLevel {
+	case ErrorLevel:
+		l = zerolog.ErrorLevel
+	case WarnLevel:
+		l = zerolog.WarnLevel
+	case InfoLevel:
+		l = zerolog.InfoLevel
+	default:
+		l = zerolog.InfoLevel
 	}
+	zerolog.SetGlobalLevel(l)
 
-	var files = []struct {
-		Path  string
-		Level zapcore.LevelEnabler
-	}{
-		{
-			Path: "./logs/error",
-			Level: zap.LevelEnablerFunc(func(level zapcore.Level) bool {
-				return level == zapcore.ErrorLevel
-			}),
-		},
-		{
-			Path: "./logs",
-			Level: zap.LevelEnablerFunc(func(level zapcore.Level) bool {
-				return level == zapcore.InfoLevel
-			}),
-		},
+	skipFrameCount := 3
+	logger := zerolog.New(w).With().Timestamp().CallerWithSkipFrameCount(zerolog.CallerSkipFrameCount + skipFrameCount).Logger()
+	return &Logger{
+		logger: &logger,
 	}
+}
 
-	var cores []zapcore.Core
-	for _, f := range files {
-		cores = append(cores, zapcore.NewCore(
-			zapcore.NewJSONEncoder(zap.NewDevelopmentEncoderConfig()),
-			zapcore.AddSync(&lumberjack.Logger{
-				Filename:   f.Path,
-				MaxSize:    100,
-				MaxBackups: 3,
-				MaxAge:     40,
-				Compress:   true,
-				LocalTime:  true,
-			}),
-			f.Level,
-		))
-	}
+func (l *Logger) Infof(message string, args ...interface{}) {
+	l.logger.Info().Msgf(message, args...)
+}
 
-	cores = append(cores, zapcore.NewCore(
-		zapcore.NewJSONEncoder(zap.NewDevelopmentEncoderConfig()),
-		zapcore.Lock(os.Stdout),
-		zapcore.InfoLevel,
-	))
+func (l *Logger) Warnf(message string, args ...interface{}) {
+	l.logger.Warn().Msgf(message, args...)
+}
 
-	loggr := zap.New(zapcore.NewTee(cores...))
+func (l *Logger) Errorf(message string, args ...interface{}) {
+	l.logger.Error().Msgf(message, args...)
+}
 
-	return loggr.Sugar(), nil
+func (l *Logger) Fatalf(message string, args ...interface{}) {
+	l.logger.Fatal().Msgf(message, args...)
+	os.Exit(1)
 }

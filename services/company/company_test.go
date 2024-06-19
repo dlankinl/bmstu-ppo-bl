@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	"github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -17,7 +17,8 @@ func TestCompanyService_Create(t *testing.T) {
 	defer ctrl.Finish()
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
-	svc := NewService(compRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -127,7 +128,8 @@ func TestCompanyService_DeleteById(t *testing.T) {
 	defer ctrl.Finish()
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
-	svc := NewService(compRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(compRepo, logger)
 
 	curUuid := uuid.New()
 
@@ -182,7 +184,8 @@ func TestCompanyService_GetAll(t *testing.T) {
 	defer ctrl.Finish()
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
-	svc := NewService(compRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -267,7 +270,8 @@ func TestCompanyService_GetById(t *testing.T) {
 	defer ctrl.Finish()
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
-	svc := NewService(compRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -337,7 +341,8 @@ func TestCompanyService_GetByOwnerId(t *testing.T) {
 	defer ctrl.Finish()
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
-	svc := NewService(compRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -439,7 +444,8 @@ func TestCompanyService_Update(t *testing.T) {
 	defer ctrl.Finish()
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
-	svc := NewService(compRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
 		name       string

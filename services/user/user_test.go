@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	mocks2 "github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -17,24 +17,25 @@ func TestUserService_DeleteById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	svc := NewService(userRepo, compRepo, actFieldRepo)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	curUuid := uuid.New()
 
 	testCases := []struct {
 		name       string
 		id         uuid.UUID
-		beforeTest func(userRepo mocks2.MockIUserRepository)
+		beforeTest func(userRepo mocks.MockIUserRepository)
 		wantErr    bool
 		errStr     error
 	}{
 		{
 			name: "успешное удаление",
 			id:   curUuid,
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					DeleteById(context.Background(), curUuid).
 					Return(nil)
@@ -44,7 +45,7 @@ func TestUserService_DeleteById(t *testing.T) {
 		{
 			name: "ошибка выполнения запроса в репозитории",
 			id:   curUuid,
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					DeleteById(context.Background(), curUuid).
 					Return(fmt.Errorf("sql error"))
@@ -74,21 +75,22 @@ func TestUserService_GetAll(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	svc := NewService(userRepo, compRepo, actFieldRepo)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {
 		name       string
-		beforeTest func(userRepo mocks2.MockIUserRepository)
+		beforeTest func(userRepo mocks.MockIUserRepository)
 		expected   []*domain.User
 		wantErr    bool
 		errStr     error
 	}{
 		{
 			name: "успешное получение списка всех компаний",
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					GetAll(context.Background(), 1).
 					Return([]*domain.User{
@@ -148,7 +150,7 @@ func TestUserService_GetAll(t *testing.T) {
 		},
 		{
 			name: "ошибка получения данных в репозитории",
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					GetAll(context.Background(), 1).
 					Return(nil, fmt.Errorf("sql error"))
@@ -179,15 +181,16 @@ func TestUserService_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	svc := NewService(userRepo, compRepo, actFieldRepo)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {
 		name       string
 		user       *domain.User
-		beforeTest func(userRepo mocks2.MockIUserRepository)
+		beforeTest func(userRepo mocks.MockIUserRepository)
 		wantErr    bool
 		errStr     error
 	}{
@@ -201,7 +204,7 @@ func TestUserService_Create(t *testing.T) {
 				Birthday: time.Date(1, 1, 1, 1, 1, 1, 1, time.Local),
 				City:     "a",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -227,7 +230,7 @@ func TestUserService_Create(t *testing.T) {
 				Birthday: time.Date(1, 1, 1, 1, 1, 1, 1, time.Local),
 				City:     "a",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				compRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -255,7 +258,7 @@ func TestUserService_Create(t *testing.T) {
 				Birthday: time.Date(1, 1, 1, 1, 1, 1, 1, time.Local),
 				City:     "",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				compRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -283,7 +286,7 @@ func TestUserService_Create(t *testing.T) {
 				Birthday: time.Date(1, 1, 1, 1, 1, 1, 1, time.Local),
 				City:     "c",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				compRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -311,7 +314,7 @@ func TestUserService_Create(t *testing.T) {
 				Birthday: time.Time{},
 				City:     "c",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				compRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -339,7 +342,7 @@ func TestUserService_Create(t *testing.T) {
 				Birthday: time.Date(1, 1, 1, 1, 1, 1, 1, time.Local),
 				City:     "c",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -379,15 +382,16 @@ func TestUserService_GetById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	svc := NewService(userRepo, compRepo, actFieldRepo)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {
 		name       string
 		id         uuid.UUID
-		beforeTest func(userRepo mocks2.MockIUserRepository)
+		beforeTest func(userRepo mocks.MockIUserRepository)
 		expected   *domain.User
 		wantErr    bool
 		errStr     error
@@ -395,7 +399,7 @@ func TestUserService_GetById(t *testing.T) {
 		{
 			name: "успешное получение компании по id",
 			id:   uuid.UUID{1},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					GetById(
 						context.Background(),
@@ -423,7 +427,7 @@ func TestUserService_GetById(t *testing.T) {
 		{
 			name: "ошибка получения данных в репозитории",
 			id:   uuid.UUID{1},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					GetById(
 						context.Background(),
@@ -457,15 +461,16 @@ func TestUserService_Update(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	svc := NewService(userRepo, compRepo, actFieldRepo)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {
 		name       string
 		user       *domain.User
-		beforeTest func(userRepo mocks2.MockIUserRepository)
+		beforeTest func(userRepo mocks.MockIUserRepository)
 		wantErr    bool
 		errStr     error
 	}{
@@ -475,7 +480,7 @@ func TestUserService_Update(t *testing.T) {
 				ID:   uuid.UUID{1},
 				City: "a",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					Update(
 						context.Background(),
@@ -493,7 +498,7 @@ func TestUserService_Update(t *testing.T) {
 				ID:   uuid.UUID{1},
 				City: "a",
 			},
-			beforeTest: func(userRepo mocks2.MockIUserRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository) {
 				userRepo.EXPECT().
 					Update(
 						context.Background(),

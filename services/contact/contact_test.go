@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	"github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -17,7 +17,8 @@ func TestContactService_Create(t *testing.T) {
 	defer ctrl.Finish()
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
-	svc := NewService(conRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(conRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -127,7 +128,8 @@ func TestContactService_DeleteById(t *testing.T) {
 	defer ctrl.Finish()
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
-	svc := NewService(conRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(conRepo, logger)
 
 	curUuid := uuid.New()
 
@@ -182,7 +184,8 @@ func TestContactService_GetByOwnerId(t *testing.T) {
 	defer ctrl.Finish()
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
-	svc := NewService(conRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(conRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -284,7 +287,8 @@ func TestContactService_GetById(t *testing.T) {
 	defer ctrl.Finish()
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
-	svc := NewService(conRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(conRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -354,7 +358,8 @@ func TestContactService_Update(t *testing.T) {
 	defer ctrl.Finish()
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
-	svc := NewService(conRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(conRepo, logger)
 
 	testCases := []struct {
 		name       string

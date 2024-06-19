@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-//go:generate mockgen -source=user.go -destination=mocks/user.go -package=mocks
+//go:generate mockgen -source=user.go -destination=../mocks/user.go -package=mocks
 
 type User struct {
 	ID       uuid.UUID

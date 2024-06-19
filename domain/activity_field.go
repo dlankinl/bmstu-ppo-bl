@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=activity_field.go -destination=mocks/activity_field.go -package=mocks
+//go:generate mockgen -source=activity_field.go -destination=../mocks/activity_field.go -package=mocks
 
 type ActivityField struct {
 	ID          uuid.UUID

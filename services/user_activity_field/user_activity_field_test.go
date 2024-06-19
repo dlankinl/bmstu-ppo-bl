@@ -3,7 +3,7 @@ package user_activity_field
 import (
 	"context"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	mocks2 "github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/dlankinl/bmstu-ppo-bl/services/activity_field"
 	"github.com/dlankinl/bmstu-ppo-bl/services/company"
 	"github.com/dlankinl/bmstu-ppo-bl/services/fin_report"
@@ -21,26 +21,27 @@ func TestInteractor_CalculateUserRating(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	finRepo := mocks2.NewMockIFinancialReportRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
 
-	userSvc := user.NewService(userRepo, compRepo, actFieldRepo)
-	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo)
-	compSvc := company.NewService(compRepo)
-	finSvc := fin_report.NewService(finRepo)
+	userSvc := user.NewService(userRepo, compRepo, actFieldRepo, logger)
+	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo, logger)
+	compSvc := company.NewService(compRepo, logger)
+	finSvc := fin_report.NewService(finRepo, logger)
 
-	interactor := NewInteractor(userSvc, actFieldSvc, compSvc, finSvc)
+	interactor := NewInteractor(userSvc, actFieldSvc, compSvc, finSvc, logger)
 
 	testCases := []struct {
 		name       string
 		userId     uuid.UUID
 		beforeTest func(
-			userRepo mocks2.MockIUserRepository,
-			finRepo mocks2.MockIFinancialReportRepository,
-			compRepo mocks2.MockICompanyRepository,
-			actFieldRepo mocks2.MockIActivityFieldRepository,
+			userRepo mocks.MockIUserRepository,
+			finRepo mocks.MockIFinancialReportRepository,
+			compRepo mocks.MockICompanyRepository,
+			actFieldRepo mocks.MockIActivityFieldRepository,
 		)
 		wantErr  bool
 		expected float32
@@ -49,7 +50,7 @@ func TestInteractor_CalculateUserRating(t *testing.T) {
 		{
 			name:   "успешное вычисление рейтинга",
 			userId: uuid.UUID{1},
-			beforeTest: func(userRepo mocks2.MockIUserRepository, finRepo mocks2.MockIFinancialReportRepository, compRepo mocks2.MockICompanyRepository, actFieldRepo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository, finRepo mocks.MockIFinancialReportRepository, compRepo mocks.MockICompanyRepository, actFieldRepo mocks.MockIActivityFieldRepository) {
 				compRepo.EXPECT().
 					GetByOwnerId(context.Background(), uuid.UUID{1}, 0).
 					Return(
@@ -229,23 +230,24 @@ func TestInteractor_GetMostProfitableCompany(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	finRepo := mocks2.NewMockIFinancialReportRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
 
-	userSvc := user.NewService(userRepo, compRepo, actFieldRepo)
-	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo)
-	compSvc := company.NewService(compRepo)
-	finSvc := fin_report.NewService(finRepo)
+	userSvc := user.NewService(userRepo, compRepo, actFieldRepo, logger)
+	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo, logger)
+	compSvc := company.NewService(compRepo, logger)
+	finSvc := fin_report.NewService(finRepo, logger)
 
-	interactor := NewInteractor(userSvc, actFieldSvc, compSvc, finSvc)
+	interactor := NewInteractor(userSvc, actFieldSvc, compSvc, finSvc, logger)
 
 	testCases := []struct {
 		name       string
 		period     *domain.Period
 		companies  []*domain.Company
-		beforeTest func(finRepo mocks2.MockIFinancialReportRepository)
+		beforeTest func(finRepo mocks.MockIFinancialReportRepository)
 		expected   *domain.Company
 		wantErr    bool
 		errStr     error
@@ -266,7 +268,7 @@ func TestInteractor_GetMostProfitableCompany(t *testing.T) {
 					ID: uuid.UUID{2},
 				},
 			},
-			beforeTest: func(finRepo mocks2.MockIFinancialReportRepository) {
+			beforeTest: func(finRepo mocks.MockIFinancialReportRepository) {
 				finRepo.EXPECT().
 					GetByCompany(
 						context.Background(),
@@ -391,26 +393,27 @@ func TestInteractor_GetUserFinancialReport(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	finRepo := mocks2.NewMockIFinancialReportRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
-	actFieldRepo := mocks2.NewMockIActivityFieldRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
+	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
 
-	userSvc := user.NewService(userRepo, compRepo, actFieldRepo)
-	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo)
-	compSvc := company.NewService(compRepo)
-	finSvc := fin_report.NewService(finRepo)
+	userSvc := user.NewService(userRepo, compRepo, actFieldRepo, logger)
+	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo, logger)
+	compSvc := company.NewService(compRepo, logger)
+	finSvc := fin_report.NewService(finRepo, logger)
 
-	interactor := NewInteractor(userSvc, actFieldSvc, compSvc, finSvc)
+	interactor := NewInteractor(userSvc, actFieldSvc, compSvc, finSvc, logger)
 
 	testCases := []struct {
 		name       string
 		userId     uuid.UUID
 		beforeTest func(
-			userRepo mocks2.MockIUserRepository,
-			finRepo mocks2.MockIFinancialReportRepository,
-			compRepo mocks2.MockICompanyRepository,
-			actFieldRepo mocks2.MockIActivityFieldRepository,
+			userRepo mocks.MockIUserRepository,
+			finRepo mocks.MockIFinancialReportRepository,
+			compRepo mocks.MockICompanyRepository,
+			actFieldRepo mocks.MockIActivityFieldRepository,
 		)
 		period   *domain.Period
 		expected *domain.FinancialReportByPeriod
@@ -420,7 +423,7 @@ func TestInteractor_GetUserFinancialReport(t *testing.T) {
 		{
 			name:   "успешный тест",
 			userId: uuid.UUID{1},
-			beforeTest: func(userRepo mocks2.MockIUserRepository, finRepo mocks2.MockIFinancialReportRepository, compRepo mocks2.MockICompanyRepository, actFieldRepo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(userRepo mocks.MockIUserRepository, finRepo mocks.MockIFinancialReportRepository, compRepo mocks.MockICompanyRepository, actFieldRepo mocks.MockIActivityFieldRepository) {
 				compRepo.EXPECT().
 					GetByOwnerId(context.Background(), uuid.UUID{1}, 0).
 					Return(

@@ -3,6 +3,7 @@ package user_activity_field
 import (
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
+	"github.com/dlankinl/bmstu-ppo-bl/pkg/logger"
 	"github.com/google/uuid"
 	"time"
 )
@@ -18,6 +19,7 @@ type Interactor struct {
 	actFieldService domain.IActivityFieldService
 	compService     domain.ICompanyService
 	finService      domain.IFinancialReportService
+	logger          logger.ILogger
 }
 
 func NewInteractor(
@@ -25,12 +27,14 @@ func NewInteractor(
 	actFieldSvc domain.IActivityFieldService,
 	compSvc domain.ICompanyService,
 	finSvc domain.IFinancialReportService,
+	logger logger.ILogger,
 ) *Interactor {
 	return &Interactor{
 		userService:     userSvc,
 		actFieldService: actFieldSvc,
 		compService:     compSvc,
 		finService:      finSvc,
+		logger:          logger,
 	}
 }
 
@@ -146,24 +150,29 @@ func (i *Interactor) CalculateUserRating(id uuid.UUID) (rating float32, err erro
 
 	report, err := i.GetUserFinancialReport(id, period)
 	if err != nil {
+		i.logger.Infof("получение финансового отчета пользователя: %v", err)
 		return 0, fmt.Errorf("получение финансового отчета пользователя: %w", err)
 	}
 
 	mostProfitableCompany, err := i.GetMostProfitableCompany(period, companies)
 	if err != nil {
+		i.logger.Infof("поиск наиболее прибыльной компании: %v", err)
 		return 0, fmt.Errorf("поиск наиболее прибыльной компании: %w", err)
 	}
 	if mostProfitableCompany == nil {
+		i.logger.Infof("у предпринимателя не найдены компании")
 		return 0, fmt.Errorf("у предпринимателя не найдены компании")
 	}
 
 	maxCost, err := i.actFieldService.GetMaxCost()
 	if err != nil {
+		i.logger.Infof("поиск максимального веса: %v", err)
 		return 0, fmt.Errorf("поиск максимального веса: %w", err)
 	}
 
 	cost, err := i.actFieldService.GetCostByCompanyId(mostProfitableCompany.ID)
 	if err != nil {
+		i.logger.Infof("получение веса сферы деятельности компании: %v", err)
 		return 0, fmt.Errorf("получение веса сферы деятельности компании: %w", err)
 	}
 
@@ -181,6 +190,7 @@ func (i *Interactor) GetUserFinancialReport(id uuid.UUID, period *domain.Period)
 
 	companies, err := i.compService.GetByOwnerId(id, 0)
 	if err != nil {
+		i.logger.Infof("получение списка компаний: %v", err)
 		return nil, fmt.Errorf("получение списка компаний: %w", err)
 	}
 
@@ -189,6 +199,7 @@ func (i *Interactor) GetUserFinancialReport(id uuid.UUID, period *domain.Period)
 	for _, comp := range companies {
 		rep, err := i.finService.GetByCompany(comp.ID, period)
 		if err != nil {
+			i.logger.Infof("получение отчета компании: %v", err)
 			return nil, fmt.Errorf("получение отчета компании: %w", err)
 		}
 

@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=fin_report.go -destination=mocks/fin_report.go -package=mocks
+//go:generate mockgen -source=fin_report.go -destination=../mocks/fin_report.go -package=mocks
 
 type FinancialReport struct {
 	ID        uuid.UUID

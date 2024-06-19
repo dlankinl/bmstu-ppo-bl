@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	mocks2 "github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -16,15 +16,17 @@ func TestUserSkillService_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userSkillRepo := mocks2.NewMockIUserSkillRepository(ctrl)
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	skillRepo := mocks2.NewMockISkillRepository(ctrl)
-	svc := NewService(userSkillRepo, userRepo, skillRepo)
+	userSkillRepo := mocks.NewMockIUserSkillRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	skillRepo := mocks.NewMockISkillRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
+	svc := NewService(userSkillRepo, userRepo, skillRepo, logger)
 
 	testCases := []struct {
 		name       string
 		pair       *domain.UserSkill
-		beforeTest func(userSkillRepo mocks2.MockIUserSkillRepository)
+		beforeTest func(userSkillRepo mocks.MockIUserSkillRepository)
 		wantErr    bool
 		errStr     error
 	}{
@@ -34,7 +36,7 @@ func TestUserSkillService_Create(t *testing.T) {
 				UserId:  uuid.UUID{1},
 				SkillId: uuid.UUID{1},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository) {
 				userSkillRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -52,7 +54,7 @@ func TestUserSkillService_Create(t *testing.T) {
 				UserId:  uuid.UUID{1},
 				SkillId: uuid.UUID{1},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository) {
 				userSkillRepo.EXPECT().
 					Create(
 						context.Background(),
@@ -88,15 +90,16 @@ func TestUserSkillService_Delete(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userSkillRepo := mocks2.NewMockIUserSkillRepository(ctrl)
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	skillRepo := mocks2.NewMockISkillRepository(ctrl)
-	svc := NewService(userSkillRepo, userRepo, skillRepo)
+	userSkillRepo := mocks.NewMockIUserSkillRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	skillRepo := mocks.NewMockISkillRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userSkillRepo, userRepo, skillRepo, logger)
 
 	testCases := []struct {
 		name       string
 		pair       *domain.UserSkill
-		beforeTest func(userSkillRepo mocks2.MockIUserSkillRepository)
+		beforeTest func(userSkillRepo mocks.MockIUserSkillRepository)
 		wantErr    bool
 		errStr     error
 	}{
@@ -106,7 +109,7 @@ func TestUserSkillService_Delete(t *testing.T) {
 				UserId:  uuid.UUID{1},
 				SkillId: uuid.UUID{1},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository) {
 				userSkillRepo.EXPECT().
 					Delete(
 						context.Background(),
@@ -124,7 +127,7 @@ func TestUserSkillService_Delete(t *testing.T) {
 				UserId:  uuid.UUID{1},
 				SkillId: uuid.UUID{1},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository) {
 				userSkillRepo.EXPECT().
 					Delete(
 						context.Background(),
@@ -160,15 +163,16 @@ func TestUserSkillService_GetSkillsForUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userSkillRepo := mocks2.NewMockIUserSkillRepository(ctrl)
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	skillRepo := mocks2.NewMockISkillRepository(ctrl)
-	svc := NewService(userSkillRepo, userRepo, skillRepo)
+	userSkillRepo := mocks.NewMockIUserSkillRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	skillRepo := mocks.NewMockISkillRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userSkillRepo, userRepo, skillRepo, logger)
 
 	testCases := []struct {
 		name       string
 		pairs      []*domain.UserSkill
-		beforeTest func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository)
+		beforeTest func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository)
 		expected   []*domain.Skill
 		wantErr    bool
 		errStr     error
@@ -189,7 +193,7 @@ func TestUserSkillService_GetSkillsForUser(t *testing.T) {
 					SkillId: uuid.UUID{3},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsByUserId(
 						context.Background(),
@@ -259,7 +263,7 @@ func TestUserSkillService_GetSkillsForUser(t *testing.T) {
 					SkillId: uuid.UUID{1},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsByUserId(
 						context.Background(),
@@ -291,7 +295,7 @@ func TestUserSkillService_GetSkillsForUser(t *testing.T) {
 					SkillId: uuid.UUID{1},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsByUserId(
 						context.Background(),
@@ -326,15 +330,16 @@ func TestUserSkillService_GetUsersForSkill(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userSkillRepo := mocks2.NewMockIUserSkillRepository(ctrl)
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	skillRepo := mocks2.NewMockISkillRepository(ctrl)
-	svc := NewService(userSkillRepo, userRepo, skillRepo)
+	userSkillRepo := mocks.NewMockIUserSkillRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	skillRepo := mocks.NewMockISkillRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userSkillRepo, userRepo, skillRepo, logger)
 
 	testCases := []struct {
 		name       string
 		pairs      []*domain.UserSkill
-		beforeTest func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository)
+		beforeTest func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository)
 		expected   []*domain.User
 		wantErr    bool
 		errStr     error
@@ -355,7 +360,7 @@ func TestUserSkillService_GetUsersForSkill(t *testing.T) {
 					SkillId: uuid.UUID{3},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsBySkillId(
 						context.Background(),
@@ -425,7 +430,7 @@ func TestUserSkillService_GetUsersForSkill(t *testing.T) {
 					SkillId: uuid.UUID{1},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsBySkillId(
 						context.Background(),
@@ -457,7 +462,7 @@ func TestUserSkillService_GetUsersForSkill(t *testing.T) {
 					SkillId: uuid.UUID{1},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsBySkillId(
 						context.Background(),
@@ -492,15 +497,16 @@ func TestUserSkillService_DeleteSkillsForUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	userSkillRepo := mocks2.NewMockIUserSkillRepository(ctrl)
-	userRepo := mocks2.NewMockIUserRepository(ctrl)
-	skillRepo := mocks2.NewMockISkillRepository(ctrl)
-	svc := NewService(userSkillRepo, userRepo, skillRepo)
+	userSkillRepo := mocks.NewMockIUserSkillRepository(ctrl)
+	userRepo := mocks.NewMockIUserRepository(ctrl)
+	skillRepo := mocks.NewMockISkillRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(userSkillRepo, userRepo, skillRepo, logger)
 
 	testCases := []struct {
 		name       string
 		pairs      []*domain.UserSkill
-		beforeTest func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository)
+		beforeTest func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository)
 		wantErr    bool
 		errStr     error
 	}{
@@ -516,7 +522,7 @@ func TestUserSkillService_DeleteSkillsForUser(t *testing.T) {
 					SkillId: uuid.UUID{2},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsByUserId(
 						context.Background(),
@@ -558,7 +564,7 @@ func TestUserSkillService_DeleteSkillsForUser(t *testing.T) {
 					SkillId: uuid.UUID{1},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsByUserId(
 						context.Background(),
@@ -594,7 +600,7 @@ func TestUserSkillService_DeleteSkillsForUser(t *testing.T) {
 					SkillId: uuid.UUID{1},
 				},
 			},
-			beforeTest: func(userSkillRepo mocks2.MockIUserSkillRepository, userRepo mocks2.MockIUserRepository, skillRepo mocks2.MockISkillRepository) {
+			beforeTest: func(userSkillRepo mocks.MockIUserSkillRepository, userRepo mocks.MockIUserRepository, skillRepo mocks.MockISkillRepository) {
 				userSkillRepo.EXPECT().
 					GetUserSkillsByUserId(
 						context.Background(),

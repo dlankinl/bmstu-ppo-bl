@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	"github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -17,7 +17,8 @@ func TestFinReportService_Create(t *testing.T) {
 	defer ctrl.Finish()
 
 	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
-	svc := NewService(finRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(finRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -235,7 +236,8 @@ func TestFinReportService_DeleteById(t *testing.T) {
 	defer ctrl.Finish()
 
 	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
-	svc := NewService(finRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(finRepo, logger)
 
 	curUuid := uuid.New()
 
@@ -290,7 +292,8 @@ func TestFinReportService_GetByCompany(t *testing.T) {
 	defer ctrl.Finish()
 
 	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
-	svc := NewService(finRepo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(finRepo, logger)
 
 	testCases := []struct {
 		name       string
@@ -607,7 +610,8 @@ func TestFinReportService_GetById(t *testing.T) {
 	defer ctrl.Finish()
 
 	repo := mocks.NewMockIFinancialReportRepository(ctrl)
-	svc := NewService(repo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(repo, logger)
 
 	testCases := []struct {
 		name       string
@@ -683,7 +687,8 @@ func TestFinReportService_Update(t *testing.T) {
 	defer ctrl.Finish()
 
 	repo := mocks.NewMockIFinancialReportRepository(ctrl)
-	svc := NewService(repo)
+	logger := mocks.NewMockILogger(ctrl)
+	svc := NewService(repo, logger)
 
 	testCases := []struct {
 		name       string

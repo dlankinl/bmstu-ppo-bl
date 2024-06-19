@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=contact.go -destination=mocks/contact.go -package=mocks
+//go:generate mockgen -source=contact.go -destination=../mocks/contact.go -package=mocks
 
 type Contact struct {
 	ID      uuid.UUID
