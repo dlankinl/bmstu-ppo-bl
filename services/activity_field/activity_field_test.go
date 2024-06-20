@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	mocks2 "github.com/dlankinl/bmstu-ppo-bl/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -16,15 +16,16 @@ func TestService_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mocks2.NewMockILogger(ctrl)
-	repo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
+	repo := mocks.NewMockIActivityFieldRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	svc := NewService(repo, compRepo, logger)
 
 	testCases := []struct {
 		name       string
 		data       *domain.ActivityField
-		beforeTest func(repo mocks2.MockIActivityFieldRepository)
+		beforeTest func(repo mocks.MockIActivityFieldRepository)
 		wantErr    bool
 		errStr     error
 	}{
@@ -35,7 +36,7 @@ func TestService_Create(t *testing.T) {
 				Description: "aaa",
 				Cost:        0.3,
 			},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					Create(
 						context.Background(),
@@ -54,7 +55,7 @@ func TestService_Create(t *testing.T) {
 				Name:        "",
 				Description: "aaa",
 			},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					Create(
 						context.Background(),
@@ -75,7 +76,7 @@ func TestService_Create(t *testing.T) {
 				Description: "",
 				Cost:        0.3,
 			},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					Create(
 						context.Background(),
@@ -96,7 +97,7 @@ func TestService_Create(t *testing.T) {
 				Name:        "aaa",
 				Description: "aaa",
 			},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					Create(
 						context.Background(),
@@ -117,7 +118,7 @@ func TestService_Create(t *testing.T) {
 				Description: "aaa",
 				Cost:        3,
 			},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					Create(
 						context.Background(),
@@ -154,9 +155,10 @@ func TestService_DeleteById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mocks2.NewMockILogger(ctrl)
-	repo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
+	repo := mocks.NewMockIActivityFieldRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	svc := NewService(repo, compRepo, logger)
 
 	curUuid := uuid.New()
@@ -164,14 +166,14 @@ func TestService_DeleteById(t *testing.T) {
 	testCases := []struct {
 		name       string
 		id         uuid.UUID
-		beforeTest func(repo mocks2.MockIActivityFieldRepository)
+		beforeTest func(repo mocks.MockIActivityFieldRepository)
 		wantErr    bool
 		errStr     error
 	}{
 		{
 			name: "успешное удаление",
 			id:   curUuid,
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					DeleteById(context.Background(), curUuid).
 					Return(nil)
@@ -181,7 +183,7 @@ func TestService_DeleteById(t *testing.T) {
 		{
 			name: "ошибка выполнения запроса в репозитории",
 			id:   curUuid,
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					DeleteById(context.Background(), curUuid).
 					Return(fmt.Errorf("sql error"))
@@ -211,15 +213,16 @@ func TestService_GetById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mocks2.NewMockILogger(ctrl)
-	repo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
+	repo := mocks.NewMockIActivityFieldRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	svc := NewService(repo, compRepo, logger)
 
 	testCases := []struct {
 		name       string
 		id         uuid.UUID
-		beforeTest func(repo mocks2.MockIActivityFieldRepository)
+		beforeTest func(repo mocks.MockIActivityFieldRepository)
 		expected   *domain.ActivityField
 		wantErr    bool
 		errStr     error
@@ -227,7 +230,7 @@ func TestService_GetById(t *testing.T) {
 		{
 			name: "успешное получение сферы деятельности по id",
 			id:   uuid.UUID{1},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					GetById(
 						context.Background(),
@@ -249,7 +252,7 @@ func TestService_GetById(t *testing.T) {
 		{
 			name: "ошибка получения данных в репозитории",
 			id:   uuid.UUID{1},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					GetById(
 						context.Background(),
@@ -283,15 +286,16 @@ func TestService_Update(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mocks2.NewMockILogger(ctrl)
-	repo := mocks2.NewMockIActivityFieldRepository(ctrl)
-	compRepo := mocks2.NewMockICompanyRepository(ctrl)
+	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
+	repo := mocks.NewMockIActivityFieldRepository(ctrl)
+	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	svc := NewService(repo, compRepo, logger)
 
 	testCases := []struct {
 		name       string
 		data       *domain.ActivityField
-		beforeTest func(repo mocks2.MockIActivityFieldRepository)
+		beforeTest func(repo mocks.MockIActivityFieldRepository)
 		wantErr    bool
 		errStr     error
 	}{
@@ -301,7 +305,7 @@ func TestService_Update(t *testing.T) {
 				ID:   uuid.UUID{1},
 				Name: "aaa",
 			},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					Update(
 						context.Background(),
@@ -319,7 +323,7 @@ func TestService_Update(t *testing.T) {
 				ID:   uuid.UUID{1},
 				Name: "aaa",
 			},
-			beforeTest: func(repo mocks2.MockIActivityFieldRepository) {
+			beforeTest: func(repo mocks.MockIActivityFieldRepository) {
 				repo.EXPECT().
 					Update(
 						context.Background(),

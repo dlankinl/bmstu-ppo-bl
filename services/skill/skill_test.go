@@ -18,6 +18,7 @@ func TestSkillService_Create(t *testing.T) {
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {
@@ -129,6 +130,7 @@ func TestSkillService_DeleteById(t *testing.T) {
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(skillRepo, logger)
 
 	curUuid := uuid.New()
@@ -185,6 +187,7 @@ func TestSkillService_GetAll(t *testing.T) {
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {
@@ -271,6 +274,7 @@ func TestSkillService_GetById(t *testing.T) {
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {
@@ -342,6 +346,7 @@ func TestSkillService_Update(t *testing.T) {
 
 	skillRepo := mocks.NewMockISkillRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(skillRepo, logger)
 
 	testCases := []struct {

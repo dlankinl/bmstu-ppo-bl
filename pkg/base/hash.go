@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//go:generate mockgen -source=hash.go -destination=../../mocks/hash.go -package=mocks
 type IHashCrypto interface {
 	GenerateHashPass(password string) (string, error)
 	CheckPasswordHash(password, hash string) bool

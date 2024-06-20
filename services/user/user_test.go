@@ -21,6 +21,7 @@ func TestUserService_DeleteById(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	curUuid := uuid.New()
@@ -79,6 +80,7 @@ func TestUserService_GetAll(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {
@@ -185,6 +187,7 @@ func TestUserService_Create(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {
@@ -386,6 +389,7 @@ func TestUserService_GetById(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {
@@ -465,6 +469,7 @@ func TestUserService_Update(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(userRepo, compRepo, actFieldRepo, logger)
 
 	testCases := []struct {

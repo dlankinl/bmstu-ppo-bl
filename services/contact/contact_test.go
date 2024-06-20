@@ -18,6 +18,7 @@ func TestContactService_Create(t *testing.T) {
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(conRepo, logger)
 
 	testCases := []struct {
@@ -129,6 +130,7 @@ func TestContactService_DeleteById(t *testing.T) {
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(conRepo, logger)
 
 	curUuid := uuid.New()
@@ -185,6 +187,7 @@ func TestContactService_GetByOwnerId(t *testing.T) {
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(conRepo, logger)
 
 	testCases := []struct {
@@ -288,6 +291,7 @@ func TestContactService_GetById(t *testing.T) {
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(conRepo, logger)
 
 	testCases := []struct {
@@ -359,6 +363,7 @@ func TestContactService_Update(t *testing.T) {
 
 	conRepo := mocks.NewMockIContactsRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(conRepo, logger)
 
 	testCases := []struct {

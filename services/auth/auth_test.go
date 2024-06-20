@@ -5,11 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dlankinl/bmstu-ppo-bl/domain"
-	mocks2 "github.com/dlankinl/bmstu-ppo-bl/domain/mocks"
 	"github.com/dlankinl/bmstu-ppo-bl/mocks"
+	"github.com/dlankinl/bmstu-ppo-bl/pkg/base"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
-	"ppo/pkg/base"
 	"testing"
 )
 
@@ -19,14 +18,15 @@ func TestAuthService_Login(t *testing.T) {
 
 	jwtKey := "abcdefgh123"
 	repo := mocks.NewMockIAuthRepository(ctrl)
-	crypto := mocks2.NewMockIHashCrypto(ctrl)
+	crypto := mocks.NewMockIHashCrypto(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(repo, crypto, jwtKey, logger)
 
 	testCases := []struct {
 		name       string
 		authInfo   *domain.UserAuth
-		beforeTest func(authRepo mocks.MockIAuthRepository, crypto mocks2.MockIHashCrypto)
+		beforeTest func(authRepo mocks.MockIAuthRepository, crypto mocks.MockIHashCrypto)
 		wantErr    bool
 		errStr     error
 	}{
@@ -36,7 +36,7 @@ func TestAuthService_Login(t *testing.T) {
 				Username: "test123",
 				Password: "pass123",
 			},
-			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks2.MockIHashCrypto) {
+			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks.MockIHashCrypto) {
 				authRepo.EXPECT().
 					GetByUsername(
 						context.Background(),
@@ -69,7 +69,7 @@ func TestAuthService_Login(t *testing.T) {
 				Username: "test123",
 				Password: "pass123",
 			},
-			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks2.MockIHashCrypto) {
+			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks.MockIHashCrypto) {
 				authRepo.EXPECT().
 					GetByUsername(
 						context.Background(),
@@ -86,7 +86,7 @@ func TestAuthService_Login(t *testing.T) {
 				Username: "test123",
 				Password: "pass123",
 			},
-			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks2.MockIHashCrypto) {
+			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks.MockIHashCrypto) {
 				authRepo.EXPECT().
 					GetByUsername(
 						context.Background(),
@@ -130,14 +130,15 @@ func TestAuthService_Register(t *testing.T) {
 	defer ctrl.Finish()
 
 	repo := mocks.NewMockIAuthRepository(ctrl)
-	crypto := mocks2.NewMockIHashCrypto(ctrl)
+	crypto := mocks.NewMockIHashCrypto(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(repo, crypto, "abcdefgh123", logger)
 
 	testCases := []struct {
 		name       string
 		authInfo   *domain.UserAuth
-		beforeTest func(authRepo mocks.MockIAuthRepository, crypto mocks2.MockIHashCrypto)
+		beforeTest func(authRepo mocks.MockIAuthRepository, crypto mocks.MockIHashCrypto)
 		expected   *domain.UserAuth
 		wantErr    bool
 		errStr     error
@@ -148,7 +149,7 @@ func TestAuthService_Register(t *testing.T) {
 				Username: "test123",
 				Password: "pass123",
 			},
-			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks2.MockIHashCrypto) {
+			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks.MockIHashCrypto) {
 				crypto.EXPECT().
 					GenerateHashPass("pass123").
 					Return("hashedPass123", nil)
@@ -195,7 +196,7 @@ func TestAuthService_Register(t *testing.T) {
 				Username: "test123",
 				Password: "pass123",
 			},
-			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks2.MockIHashCrypto) {
+			beforeTest: func(authRepo mocks.MockIAuthRepository, crypto mocks.MockIHashCrypto) {
 				crypto.EXPECT().
 					GenerateHashPass("pass123").
 					Return("hashedPass123", nil)

@@ -18,6 +18,7 @@ func TestFinReportService_Create(t *testing.T) {
 
 	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(finRepo, logger)
 
 	testCases := []struct {
@@ -237,6 +238,7 @@ func TestFinReportService_DeleteById(t *testing.T) {
 
 	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(finRepo, logger)
 
 	curUuid := uuid.New()
@@ -293,6 +295,7 @@ func TestFinReportService_GetByCompany(t *testing.T) {
 
 	finRepo := mocks.NewMockIFinancialReportRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(finRepo, logger)
 
 	testCases := []struct {
@@ -611,6 +614,7 @@ func TestFinReportService_GetById(t *testing.T) {
 
 	repo := mocks.NewMockIFinancialReportRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(repo, logger)
 
 	testCases := []struct {
@@ -688,6 +692,7 @@ func TestFinReportService_Update(t *testing.T) {
 
 	repo := mocks.NewMockIFinancialReportRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(repo, logger)
 
 	testCases := []struct {

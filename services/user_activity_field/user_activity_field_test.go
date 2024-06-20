@@ -26,6 +26,7 @@ func TestInteractor_CalculateUserRating(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 
 	userSvc := user.NewService(userRepo, compRepo, actFieldRepo, logger)
 	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo, logger)
@@ -235,6 +236,7 @@ func TestInteractor_GetMostProfitableCompany(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 
 	userSvc := user.NewService(userRepo, compRepo, actFieldRepo, logger)
 	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo, logger)
@@ -398,6 +400,7 @@ func TestInteractor_GetUserFinancialReport(t *testing.T) {
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	actFieldRepo := mocks.NewMockIActivityFieldRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 
 	userSvc := user.NewService(userRepo, compRepo, actFieldRepo, logger)
 	actFieldSvc := activity_field.NewService(actFieldRepo, compRepo, logger)

@@ -18,6 +18,7 @@ func TestCompanyService_Create(t *testing.T) {
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
@@ -129,6 +130,7 @@ func TestCompanyService_DeleteById(t *testing.T) {
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(compRepo, logger)
 
 	curUuid := uuid.New()
@@ -185,6 +187,7 @@ func TestCompanyService_GetAll(t *testing.T) {
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
@@ -271,6 +274,7 @@ func TestCompanyService_GetById(t *testing.T) {
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
@@ -342,6 +346,7 @@ func TestCompanyService_GetByOwnerId(t *testing.T) {
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(compRepo, logger)
 
 	testCases := []struct {
@@ -445,6 +450,7 @@ func TestCompanyService_Update(t *testing.T) {
 
 	compRepo := mocks.NewMockICompanyRepository(ctrl)
 	logger := mocks.NewMockILogger(ctrl)
+	logger.EXPECT().Infof(gomock.Any()).AnyTimes()
 	svc := NewService(compRepo, logger)
 
 	testCases := []struct {

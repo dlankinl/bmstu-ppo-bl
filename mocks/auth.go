@@ -11,9 +11,9 @@ package mocks
 
 import (
 	context "context"
-	domain "github.com/dlankinl/bmstu-ppo-bl/domain"
 	reflect "reflect"
 
+	domain "github.com/dlankinl/bmstu-ppo-bl/domain"
 	gomock "go.uber.org/mock/gomock"
 )
 
